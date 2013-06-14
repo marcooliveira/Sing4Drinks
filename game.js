@@ -5,6 +5,20 @@ var Color = require('launchpadder').Color;
 var colors = require('colors');
 var mout = require('mout');
 
+var fs = require('fs');
+var lame = require('lame');
+var Speaker = require('speaker');
+
+function playSound(file) {
+    fs.createReadStream(file)
+      .pipe(new lame.Decoder())
+      .on('format', function (format) {
+        this.pipe(new Speaker(format));
+      });
+}
+
+
+
 // 0,0 are the midi ports that are selected
 var pad = new launchpadder(0, 0);
 
@@ -208,6 +222,7 @@ function swipeDown(color, delay, cb) {
 }
 
 function win() {
+    playSound('success.mp3');
     swipeDown(Color.GREEN, 30, function () {
         var timeline = ['smile', 'allDark', 'smile', 'allDark', 'smile', 'clearInterval'];
 
@@ -234,6 +249,7 @@ function win() {
 }
 
 function lose() {
+    playSound('you_suck.mp3');
     swipeDown(Color.RED, 30, function () {
         var timeline = ['cry', 'allDark', 'cry', 'allDark', 'cry', 'clearInterval'];
 
